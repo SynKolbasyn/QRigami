@@ -11,10 +11,10 @@ from dotenv import load_dotenv
 
 def get_env_bool(key: str) -> bool:
     """Get bool variable from env."""
-    return environ[key].lower() in {"y", "yes", "t", "true", "on"}
+    return environ[key].lower() in {"y", "yes", "t", "true", "on", "1"}
 
 
-load_dotenv()
+load_dotenv(override=True)
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,6 +24,7 @@ SECRET_KEY = environ["DJANGO_SECRET_KEY"]
 DEBUG = get_env_bool("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = ["*"]
+INTERNAL_IPS = ["127.0.0.1"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -32,10 +33,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "debug_toolbar",
+    "django_cleanup.apps.CleanupConfig",
+    "sorl.thumbnail",
 ]
 
 MIDDLEWARE = [
     "django.middleware.gzip.GZipMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -50,7 +55,7 @@ ROOT_URLCONF = "qrigami.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates/"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -96,10 +101,15 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
-
-USE_I18N = True
 USE_TZ = True
 
+USE_I18N = True
+
 STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static_dev/",
+]
+
+MEDIA_URL = "media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
