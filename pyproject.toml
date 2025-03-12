@@ -1,0 +1,9 @@
+[project]
+name = "qrigami"
+version = "0.1.0"
+description = "QR code generator site"
+authors = [
+    { name = "Andrew Kozmin", email = "syn.kolbasyn.06@gmail.com" }
+]
+requires-python = ">=3.13, <3.14"
+dependencies = []
