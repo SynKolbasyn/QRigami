@@ -6,10 +6,19 @@ authors = [
     { name = "Andrew Kozmin", email = "syn.kolbasyn.06@gmail.com" }
 ]
 requires-python = ">=3.13, <3.14"
-dependencies = []
+dependencies = [
+    "django>=5.1.7",
+    "python-dotenv>=1.0.1",
+]
 
 [dependency-groups]
 dev = [
     "pre-commit>=4.1.0",
     "ruff>=0.9.10",
 ]
+
+[tool.ruff]
+line-length = 79
+target-version = "py313"
+lint.select = ["ALL"]
+lint.ignore = ["D211", "D213"]
