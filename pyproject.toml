@@ -5,6 +5,7 @@ description = "QR code generator site"
 authors = [
     { name = "Andrew Kozmin", email = "syn.kolbasyn.06@gmail.com" }
 ]
+license = "AGPL-3.0-or-later"
 requires-python = ">=3.13, <3.14"
 dependencies = [
     "django>=5.1.7",
