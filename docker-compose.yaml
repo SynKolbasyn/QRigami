@@ -1,0 +1,10 @@
+services:
+  django:
+    container_name: "django"
+    hostname: "django"
+    build:
+      dockerfile: "./Dockerfile"
+    ports:
+      - "80:80"
+    env_file:
+      - "./.env"

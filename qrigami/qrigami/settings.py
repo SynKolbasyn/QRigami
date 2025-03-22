@@ -20,15 +20,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from os import environ
 from pathlib import Path
 
-from dotenv import load_dotenv
-
 
 def get_env_bool(key: str) -> bool:
     """Get bool variable from env."""
     return environ[key].lower() in {"y", "yes", "t", "true", "on", "1"}
-
-
-load_dotenv(override=True)
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
