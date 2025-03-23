@@ -8,7 +8,10 @@ services:
       - "80"
     env_file:
       - "./.env"
-  
+    depends_on:
+      - "postgresql"
+    restart: "always"
+
   nginx:
     container_name: "nginx"
     hostname: "nginx"
@@ -17,3 +20,21 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    volumes:
+      - "./static/:/var/www/static/"
+    depends_on:
+      - "django"
+    restart: "always"
+
+  postgresql:
+    container_name: "postgresql"
+    hostname: "postgresql"
+    image: "postgres:latest"
+    ports:
+      - "5432"
+    volumes:
+      - "./database/:/var/lib/postgresql/data"
+    env_file:
+      - "./.env"
+    shm_size: "1gb"
+    restart: "always"

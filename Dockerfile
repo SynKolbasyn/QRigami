@@ -15,4 +15,4 @@ COPY ./qrigami/ ./qrigami/
 
 WORKDIR /qrigami/qrigami/
 
-ENTRYPOINT ["sh", "-c", "uv run --no-dev gunicorn -w $(nproc) -b 0.0.0.0:80 -k uvicorn.workers.UvicornWorker qrigami.asgi:application"]
+ENTRYPOINT ["sh", "-c", "uv run --no-dev manage.py migrate; uv run --no-dev gunicorn -w $(nproc) -b 0.0.0.0:80 -k uvicorn.workers.UvicornWorker qrigami.asgi:application"]

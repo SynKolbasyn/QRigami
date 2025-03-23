@@ -10,6 +10,8 @@ wheels/
 .venv
 
 
+/database/
+
 *.lock
 *.sqlite3
 
