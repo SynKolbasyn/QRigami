@@ -127,7 +127,8 @@ USE_TZ = True
 USE_I18N = True
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR.parent / "static/"
+STATIC_ROOT = BASE_DIR / "static/"
+STATICFILES_DIRS = [BASE_DIR / "static_dev/"]
 
 
 MEDIA_URL = "media/"
