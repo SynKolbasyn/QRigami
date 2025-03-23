@@ -29,6 +29,7 @@ docker compose up --build -d
 
 ## Dependencies
 
+- [Docker](https://www.docker.com/)
 - [uv](https://github.com/astral-sh/uv)
 
 ## Configuration
