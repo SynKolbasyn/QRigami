@@ -17,17 +17,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 
-from debug_toolbar.toolbar import debug_toolbar_urls
-from django.conf import settings
-from django.conf.urls.static import static
-from django.contrib import admin
-from django.urls import include, path
+from django.urls import path
+
+from web_authn.views import SignUpView
+
+app_name = "web_authn"
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("web_authn/", include("web_authn.urls")),
+    path("signup/", SignUpView.as_view(), name="signup"),
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += debug_toolbar_urls()
