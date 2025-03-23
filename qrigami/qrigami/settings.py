@@ -23,12 +23,12 @@ from pathlib import Path
 
 def get_env_bool(key: str) -> bool:
     """Get bool variable from env."""
-    return environ[key].lower() in {"y", "yes", "t", "true", "on", "1"}
+    return environ.get(key, "").lower() in {"y", "yes", "t", "true", "on", "1"}
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = environ["DJANGO_SECRET_KEY"]
+SECRET_KEY = environ.get("DJANGO_SECRET_KEY", "DJANGO_SECRET_KEY")
 
 DEBUG = get_env_bool("DJANGO_DEBUG")
 
@@ -88,9 +88,9 @@ DATABASES = {
         },
         "HOST": "postgresql",
         "PORT": "5432",
-        "USER": environ["POSTGRES_USER"],
-        "PASSWORD": environ["POSTGRES_PASSWORD"],
-        "NAME": environ["POSTGRES_DB"],
+        "USER": environ.get("POSTGRES_USER", "POSTGRES_USER"),
+        "PASSWORD": environ.get("POSTGRES_PASSWORD", "POSTGRES_PASSWORD"),
+        "NAME": environ.get("POSTGRES_DB", "POSTGRES_DB"),
     },
 }
 
@@ -122,9 +122,8 @@ USE_TZ = True
 USE_I18N = True
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [
-    BASE_DIR / "static_dev/",
-]
+STATIC_ROOT = BASE_DIR / "../static/"
+
 
 MEDIA_URL = "media/"
 
