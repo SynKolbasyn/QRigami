@@ -5,6 +5,15 @@ services:
     build:
       dockerfile: "./Dockerfile"
     ports:
-      - "80:80"
+      - "80"
     env_file:
       - "./.env"
+  
+  nginx:
+    container_name: "nginx"
+    hostname: "nginx"
+    build:
+      dockerfile: "./nginx/Dockerfile"
+    ports:
+      - "80:80"
+      - "443:443"
