@@ -28,10 +28,10 @@ services:
 
   postgresql:
     container_name: "postgresql"
-    hostname: "postgresql"
+    hostname: "$POSTGRES_HOST"
     image: "postgres:latest"
     ports:
-      - "5432"
+      - "$POSTGRES_PORT:$POSTGRES_PORT"
     volumes:
       - "./database/:/var/lib/postgresql/data"
     env_file:

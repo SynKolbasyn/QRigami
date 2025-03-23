@@ -21,16 +21,18 @@ from os import environ
 from pathlib import Path
 
 
-def get_env_bool(key: str) -> bool:
+def get_env_bool(key: str, *, default: bool = False) -> bool:
     """Get bool variable from env."""
-    return environ.get(key, "").lower() in {"y", "yes", "t", "true", "on", "1"}
+    if key not in environ:
+        return default
+    return environ[key].lower() in {"y", "yes", "t", "true", "on", "1"}
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = environ.get("DJANGO_SECRET_KEY", "DJANGO_SECRET_KEY")
 
-DEBUG = get_env_bool("DJANGO_DEBUG")
+DEBUG = get_env_bool("DJANGO_DEBUG", default=True)
 
 ALLOWED_HOSTS = ["*"]
 INTERNAL_IPS = ["127.0.0.1"]
@@ -42,9 +44,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "debug_toolbar",
     "django_cleanup.apps.CleanupConfig",
     "sorl.thumbnail",
+
+    "web_authn.apps.WebAuthnConfig",
 ]
 
 MIDDLEWARE = [
@@ -86,8 +91,8 @@ DATABASES = {
         "OPTIONS": {
             "pool": True,
         },
-        "HOST": "postgresql",
-        "PORT": "5432",
+        "HOST": environ.get("POSTGRES_HOST", "127.0.0.1"),
+        "PORT": environ.get("POSTGRES_PORT", "5432"),
         "USER": environ.get("POSTGRES_USER", "POSTGRES_USER"),
         "PASSWORD": environ.get("POSTGRES_PASSWORD", "POSTGRES_PASSWORD"),
         "NAME": environ.get("POSTGRES_DB", "POSTGRES_DB"),
@@ -122,7 +127,7 @@ USE_TZ = True
 USE_I18N = True
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "../static/"
+STATIC_ROOT = BASE_DIR.parent / "static/"
 
 
 MEDIA_URL = "media/"
