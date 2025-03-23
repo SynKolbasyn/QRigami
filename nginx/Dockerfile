@@ -11,6 +11,9 @@ FROM ghcr.io/astral-sh/uv:alpine AS static
 ENV UV_LINK_MODE=copy
 ENV UV_COMPILE_BYTECODE=1
 
+RUN apk add --no-cache zstd
+RUN apk add --no-cache brotli
+
 WORKDIR /qrigami/
 
 COPY ../.python-version ./
@@ -22,8 +25,6 @@ RUN uv sync --upgrade --no-dev
 COPY ../qrigami/ ./qrigami/
 RUN uv run --no-dev ./qrigami/manage.py collectstatic --no-input
 
-RUN apk add --no-cache zstd
-RUN apk add --no-cache brotli
 RUN for file in $(find ./qrigami/static/ -type f); do \
     zstd -z --ultra -22 -o ${file}.zst $file && \
     brotli -q 11 -o ${file}.br $file && \
