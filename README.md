@@ -54,7 +54,13 @@ Start database
 docker compose up --build -d postgresql
 ```
 
-Start Server
+Run migrations
+
+```bash
+POSTGRES_HOST=127.0.0.1 uv run ./qrigami/manage.py migrate
+```
+
+Start server
 
 ```bash
 POSTGRES_HOST=127.0.0.1 uv run ./qrigami/manage.py runserver
