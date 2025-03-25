@@ -57,5 +57,5 @@ docker compose up --build -d postgresql
 Start Server
 
 ```bash
-uv run ./qrigami/manage.py runserver
+POSTGRES_HOST=127.0.0.1 uv run ./qrigami/manage.py runserver
 ```
