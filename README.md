@@ -24,6 +24,8 @@ Optional flag `-d` to get free terminal after containers have started
 docker compose up --build -d
 ```
 
+[Click](https://localhost/)
+
 
 # Development
 
@@ -63,5 +65,7 @@ POSTGRES_HOST=127.0.0.1 uv run ./qrigami/manage.py migrate
 Start server
 
 ```bash
-POSTGRES_HOST=127.0.0.1 uv run ./qrigami/manage.py runserver
+POSTGRES_HOST=127.0.0.1 DJANGO_ORIGIN=http://localhost:8000 uv run ./qrigami/manage.py runserver
 ```
+
+[Click](http://localhost:8000/)

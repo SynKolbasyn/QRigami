@@ -136,3 +136,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 HOST = environ.get("DJANGO_HOST", "localhost")
 HOST_NAME = environ.get("DJANGO_HOST_NAME", "QRigami")
+ORIGIN = environ.get("DJANGO_ORIGIN", f"http://{HOST}:8000")
