@@ -16,6 +16,7 @@ dependencies = [
     "sorl-thumbnail>=12.11.0",
     "tzdata>=2025.1",
     "uvicorn>=0.34.0",
+    "webauthn>=2.5.2",
 ]
 
 [dependency-groups]
@@ -25,7 +26,6 @@ dev = [
 ]
 
 [tool.ruff]
-line-length = 79
 target-version = "py313"
 lint.select = ["ALL"]
 lint.ignore = ["D211", "D213"]
