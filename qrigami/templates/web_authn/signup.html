@@ -14,21 +14,13 @@
 <script>
 
   document.querySelector("button").addEventListener("click", async () => {
-    const form = document.querySelector("form");
-    const formData = new FormData(form);
-
     const response = await fetch("{% url 'web_authn:signup_start' %}", {
       method: "POST",
-      body: formData
+      body: new FormData(document.querySelector("form"))
     });
 
-    const optionsJSON = JSON.parse(await response.json());
-
-    const options = await PublicKeyCredential.parseCreationOptionsFromJSON(optionsJSON);
-
+    const options = await PublicKeyCredential.parseCreationOptionsFromJSON(JSON.parse(await response.json()));
     const credential = await navigator.credentials.create({ publicKey: options });
-
-    console.log(credential.toJSON());
 
     await fetch("{% url 'web_authn:signup_finish' %}", {
       method: "POST",
@@ -38,8 +30,6 @@
       },
       body: JSON.stringify(credential.toJSON())
     });
-
-    alert("Регистрация завершена!");
   });
 
 </script>
