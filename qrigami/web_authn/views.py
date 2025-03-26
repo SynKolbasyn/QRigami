@@ -28,6 +28,7 @@ from webauthn.helpers.base64url_to_bytes import base64url_to_bytes
 from webauthn.helpers.bytes_to_base64url import bytes_to_base64url
 
 from web_authn.forms import SignUpForm
+from web_authn.models import Credentials
 from web_authn.serializers import WebAuthnJSONEncoder
 
 
@@ -48,14 +49,19 @@ class SignUpStartView(View):
         form = SignUpForm(request.POST or None)
 
         if not form.is_valid():
-            return HttpResponseBadRequest({"errors": form.errors.as_data()})
+            return HttpResponseBadRequest(form.errors.as_json())
+
+        username = form.cleaned_data[User.username.field.name]
 
         options = generate_registration_options(
             rp_id=settings.HOST,
             rp_name=settings.HOST_NAME,
-            user_name=form.cleaned_data[User.username.field.name],
+            user_name=username,
         )
+
         request.session["challenge"] = bytes_to_base64url(options.challenge)
+        request.session["username"] = bytes_to_base64url(username.encode("utf-8"))
+
         return JsonResponse(options, WebAuthnJSONEncoder, safe=False)
 
 
@@ -65,13 +71,30 @@ class SignUpFinishView(View):
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """Process post requests."""
-        del request.session["challenge"]
-        _verified_registration = verify_registration_response(
+        challenge = base64url_to_bytes(request.session.pop("challenge"))
+        username = base64url_to_bytes(request.session.pop("username")).decode("utf-8")
+
+        verified_registration = verify_registration_response(
             credential=loads(request.body.decode("utf-8")),
-            expected_challenge=base64url_to_bytes(request.session["challenge"]),
+            expected_challenge=challenge,
             expected_rp_id=settings.HOST,
             expected_origin=settings.ORIGIN,
             require_user_presence=True,
             require_user_verification=True,
         )
+
+        user = User(username=username)
+        user.set_unusable_password()
+        user.full_clean()
+        user.save()
+
+        credentials = Credentials(
+            user=user,
+            credential_id=verified_registration.credential_id,
+            credential_public_key=verified_registration.credential_public_key,
+            sign_count=verified_registration.sign_count,
+        )
+        credentials.full_clean()
+        credentials.save()
+
         return HttpResponse()
