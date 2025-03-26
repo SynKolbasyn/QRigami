@@ -11,4 +11,37 @@
   </form>
 </div>
 
+<script>
+
+  document.querySelector("button").addEventListener("click", async () => {
+    const form = document.querySelector("form");
+    const formData = new FormData(form);
+
+    const response = await fetch("{% url 'web_authn:signup_start' %}", {
+      method: "POST",
+      body: formData
+    });
+
+    const optionsJSON = JSON.parse(await response.json());
+
+    const options = await PublicKeyCredential.parseCreationOptionsFromJSON(optionsJSON);
+
+    const credential = await navigator.credentials.create({ publicKey: options });
+
+    console.log(credential.toJSON());
+
+    await fetch("{% url 'web_authn:signup_finish' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": document.querySelector("input[name='csrfmiddlewaretoken']").value
+      },
+      body: JSON.stringify(credential.toJSON())
+    });
+
+    alert("Регистрация завершена!");
+  });
+
+</script>
+
 {% endblock content %}
