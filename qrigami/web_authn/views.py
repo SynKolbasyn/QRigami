@@ -17,21 +17,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.views import View
+from django.views.generic import FormView
+
+from web_authn.forms import SignUpForm
 
 
-class SignUpView(View):
+class SignUpView(FormView):
 
     """WebAuthn signup view."""
 
     template_name = "web_authn/signup.html"
-
-    def get(self, request: HttpRequest) -> HttpResponse:
-        """Process get requests."""
-        return render(request, self.template_name)
-
-    def post(self, request: HttpRequest) -> HttpResponse:
-        """Process post requests."""
-        return render(request, self.template_name)
+    form_class = SignUpForm
