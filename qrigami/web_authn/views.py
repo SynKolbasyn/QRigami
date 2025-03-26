@@ -65,6 +65,7 @@ class SignUpFinishView(View):
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """Process post requests."""
+        del request.session["challenge"]
         _verified_registration = verify_registration_response(
             credential=loads(request.body.decode("utf-8")),
             expected_challenge=base64url_to_bytes(request.session["challenge"]),
