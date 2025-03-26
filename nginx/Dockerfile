@@ -62,6 +62,7 @@ RUN ./auto/configure \
     --prefix=/etc/nginx/ \
     --with-http_gzip_static_module \
     --with-http_ssl_module \
+    --with-http_v2_module \
     --add-module=/tmp/zstd-nginx-module/ \
     --add-module=/tmp/ngx_brotli/
 RUN make -j $(nproc) modules
