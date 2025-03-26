@@ -19,11 +19,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.urls import path
 
-from web_authn.views import SignUpView
+from web_authn.views import SignUpStartView, SignUpView
 
 app_name = "web_authn"
 
 urlpatterns = [
     path("signup/", SignUpView.as_view(), name="signup"),
+    path("signup/start/", SignUpStartView.as_view(), name="signup_start"),
 ]
 

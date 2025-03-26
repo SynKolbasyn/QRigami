@@ -17,9 +17,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 
-from django.views.generic import FormView
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.http import HttpRequest, HttpResponseBadRequest, JsonResponse
+from django.views.generic import FormView, View
+from webauthn import generate_registration_options
 
 from web_authn.forms import SignUpForm
+from web_authn.serializers import WebAuthnJSONEncoder
 
 
 class SignUpView(FormView):
@@ -28,3 +33,22 @@ class SignUpView(FormView):
 
     template_name = "web_authn/signup.html"
     form_class = SignUpForm
+
+
+class SignUpStartView(View):
+
+    """WebAuthn signup start view."""
+
+    def post(self, request: HttpRequest) -> JsonResponse:
+        """Process post requests."""
+        form = SignUpForm(request.POST or None)
+
+        if not form.is_valid():
+            return HttpResponseBadRequest({"errors": form.errors.as_data()})
+
+        options = generate_registration_options(
+            rp_id=settings.HOST,
+            rp_name=settings.HOST_NAME,
+            user_name=form.cleaned_data[User.username.field.name],
+        )
+        return JsonResponse(options, WebAuthnJSONEncoder, safe=False)
