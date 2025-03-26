@@ -129,7 +129,9 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "static/"
 STATICFILES_DIRS = [BASE_DIR / "static_dev/"]
 
-
 MEDIA_URL = "media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+HOST = environ.get("DJANGO_HOST", "localhost")
