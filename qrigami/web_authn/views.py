@@ -125,13 +125,13 @@ class UserActivationView(View):
 
         query = (
             Credentials.objects.filter(credential_id=credential_id)
-            .select_related(f"{Credentials.user.field.name}")
+            .select_related(Credentials.user.field.name)
             .only(f"{Credentials.user.field.name}__{User.is_active.field.name}")
         )
 
         user = get_object_or_404(query).user
 
         user.is_active = True
-        user.save(update_fields=[f"{User.is_active.field.name}"])
+        user.save(update_fields=[User.is_active.field.name])
 
         return HttpResponse()
