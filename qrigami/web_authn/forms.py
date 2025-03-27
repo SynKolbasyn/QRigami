@@ -32,4 +32,10 @@ class SignUpForm(ModelForm):
         model = User
         fields = (
             User.username.field.name,
+            User.email.field.name,
         )
+
+    def __init__(self, *args: object, **kwargs: object) -> None:
+        """Initialize form."""
+        super().__init__(*args, **kwargs)
+        self.fields[User.email.field.name].required = True
