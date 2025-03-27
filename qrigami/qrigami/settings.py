@@ -137,3 +137,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 HOST = environ.get("DJANGO_HOST", "localhost")
 HOST_NAME = environ.get("DJANGO_HOST_NAME", "QRigami")
 ORIGIN = environ.get("DJANGO_ORIGIN", f"http://{HOST}:8000")
+
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = BASE_DIR / "sent_emails/"
+if not DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = environ["DJANGO_EMAIL_HOST"]
+    EMAIL_HOST_PASSWORD = environ["DJANGO_EMAIL_HOST_PASSWORD"]
+    EMAIL_HOST_USER = environ["DJANGO_EMAIL_HOST_USER"]
+    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = environ["DJANGO_EMAIL_PORT"]
