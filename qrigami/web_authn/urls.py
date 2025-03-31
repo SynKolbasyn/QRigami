@@ -50,4 +50,3 @@ urlpatterns = [
         name="activate",
     ),
 ]
-

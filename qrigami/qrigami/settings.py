@@ -141,6 +141,7 @@ ORIGIN = environ.get("DJANGO_ORIGIN", f"http://{HOST}:8000")
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR / "sent_emails/"
+
 if not DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = environ["DJANGO_EMAIL_HOST"]
