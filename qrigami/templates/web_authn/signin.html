@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="container">
+  <form>
+    {% csrf_token %}
+    {{ form }}
+    <button type="button" class="btn btn-primary position-absolute top-50 start-50 translate-middle">{% translate "SignIn" %}</button>
+  </form>
+</div>
+
+<script>
+
+  document.querySelector("button").addEventListener("click", async () => {
+    const response = await fetch("{% url 'web_authn:signin_start' %}", {
+      method: "POST",
+      body: new FormData(document.querySelector("form"))
+    });
+
+    const options = await PublicKeyCredential.parseRequestOptionsFromJSON(JSON.parse(await response.json()));
+    const credential = await navigator.credentials.get({ publicKey: options });
+
+    await fetch("{% url 'web_authn:signin_finish' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": document.querySelector("input[name='csrfmiddlewaretoken']").value
+      },
+      body: JSON.stringify(credential.toJSON())
+    });
+  });
+
+</script>
+
+{% endblock content %}
