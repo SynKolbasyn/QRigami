@@ -71,7 +71,7 @@ class SignUpStartView(View):
 
 class SignUpFinishView(View):
 
-    """WebAuthn signup start view."""
+    """WebAuthn signup finish view."""
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """Process post requests."""
