@@ -10,4 +10,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
-      - run: cd ./qrigami/ && uv run manage.py test
+      - run: DJANGO_DEBUG=True cd ./qrigami/ && uv run manage.py test
