@@ -39,3 +39,21 @@ class SignUpForm(ModelForm):
         """Initialize form."""
         super().__init__(*args, **kwargs)
         self.fields[User.email.field.name].required = True
+
+
+class SignInForm(ModelForm):
+
+    """SignIn form class."""
+
+    class Meta:
+
+        """SignIn meta class."""
+
+        model = User
+        fields = (
+            User.username.field.name,
+        )
+
+    def __init__(self, *args: object, **kwargs: object) -> None:
+        """Initialize form."""
+        super().__init__(*args, **kwargs)
