@@ -7,7 +7,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      DJANGO_DEBUG: True
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
-      - run: DJANGO_DEBUG=True cd ./qrigami/ && uv run manage.py test
+      - run: cd ./qrigami/ && uv run manage.py test
