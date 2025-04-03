@@ -60,4 +60,4 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/mondegrin/qrigami_django:latest
+          tags: ghcr.io/mondegrin/qrigami:latest
