@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  nginx:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      -
+        name: Build
+        uses: docker/build-push-action@v6
+        with:
+          context: ./nginx/
+          push: true
+          tags: mondegrin/qrigami_nginx:latest
+
+  nginx:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      -
+        name: Build
+        uses: docker/build-push-action@v6
+        with:
+          context: ./
+          push: true
+          tags: mondegrin/qrigami_django:latest
