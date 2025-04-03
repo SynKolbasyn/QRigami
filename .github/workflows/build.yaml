@@ -25,7 +25,7 @@ jobs:
           push: true
           tags: mondegrin/qrigami_nginx:latest
 
-  nginx:
+  django:
     runs-on: ubuntu-latest
     steps:
       -
