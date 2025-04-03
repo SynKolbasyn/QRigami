@@ -23,7 +23,7 @@ COPY ../pyproject.toml ./
 RUN uv sync --upgrade --no-dev
 
 COPY ../qrigami/ ./qrigami/
-RUN uv run --no-dev ./qrigami/manage.py collectstatic --no-input
+RUN DJANGO_DEBUG=True uv run --no-dev ./qrigami/manage.py collectstatic --no-input
 
 RUN for file in $(find ./qrigami/static/ -type f); do \
     zstd -z --ultra -22 -o ${file}.zst $file && \
