@@ -22,7 +22,7 @@ from json import loads
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import FormView, View
 from webauthn import generate_registration_options, verify_registration_response
@@ -119,19 +119,18 @@ class UserActivationView(View):
 
     """User activation veiw."""
 
-    def get(self, _request: HttpRequest, credential_id: str) -> HttpResponse:
+    def get(self, request: HttpRequest, credential_id: str) -> HttpResponse:
         """Process get requests."""
         credential_id = base64url_to_bytes(credential_id)
 
         query = (
-            Credentials.objects.filter(credential_id=credential_id)
-            .select_related(Credentials.user.field.name)
-            .only(f"{Credentials.user.field.name}__{User.is_active.field.name}")
+            User.objects.filter(credentials__credential_id=credential_id)
+            .only(User.id.field.name)
         )
 
-        user = get_object_or_404(query).user
+        user = get_object_or_404(query)
 
         user.is_active = True
         user.save(update_fields=[User.is_active.field.name])
 
-        return HttpResponse()
+        return render(request, "web_authn/email_verification_success.html")
