@@ -60,4 +60,4 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/mondegrin/qrigami:latest
+          tags: ghcr.io/${{ github.repository }}/qrigami:latest
