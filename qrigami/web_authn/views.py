@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 
+from http import HTTPStatus
 from json import loads
 
 from django.conf import settings
@@ -28,6 +29,7 @@ from django.views.generic import FormView, View
 from webauthn import (
     generate_authentication_options,
     generate_registration_options,
+    verify_authentication_response,
     verify_registration_response,
 )
 from webauthn.helpers.base64url_to_bytes import base64url_to_bytes
@@ -168,3 +170,46 @@ class SignInStartView(View):
         request.session["challenge"] = bytes_to_base64url(options.challenge)
 
         return JsonResponse(options, WebAuthnJSONEncoder, safe=False)
+
+
+class SignInFinishView(View):
+
+    """WebAuthn signin finish view."""
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        """Process post requests."""
+        challenge = base64url_to_bytes(request.session.pop("challenge"))
+        credential = loads(request.body.decode("utf-8"))
+        credential_id = base64url_to_bytes(credential["id"])
+
+        query = (
+            Credentials.objects.filter(credential_id=credential_id)
+            .select_related(Credentials.user.field.name)
+            .only(
+                f"{Credentials.user.field.name}__{User.is_active.field.name}",
+                Credentials.credential_public_key.field.name,
+                Credentials.sign_count.field.name,
+            )
+        )
+
+        credentials = get_object_or_404(query)
+
+        if not credentials.user.is_active:
+            return HttpResponse(
+                "Please verify your email",
+                status=HTTPStatus.NOT_ACCEPTABLE,
+            )
+
+        verified_authentication = verify_authentication_response(
+            credential=credential,
+            expected_challenge=challenge,
+            expected_rp_id=settings.HOST,
+            expected_origin=settings.ORIGIN,
+            credential_public_key=credentials.credential_public_key,
+            credential_current_sign_count=credentials.sign_count,
+            require_user_verification=True,
+        )
+        credentials.sign_count = verified_authentication.new_sign_count
+        credentials.save(update_fields=[Credentials.sign_count.field.name])
+
+        return HttpResponse()
