@@ -1,5 +1,9 @@
 FROM ghcr.io/astral-sh/uv:alpine
 
+LABEL org.opencontainers.image.source=https://github.com/SynKolbasyn/QRigami
+LABEL org.opencontainers.image.description="Django image"
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
+
 ENV UV_LINK_MODE=copy
 ENV UV_COMPILE_BYTECODE=1
 

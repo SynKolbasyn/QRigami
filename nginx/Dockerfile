@@ -31,7 +31,7 @@ RUN for file in $(find ./qrigami/static/ -type f); do \
     gzip -9 -k $file; done
 
 
-FROM debian:stable-slim
+FROM debian:stable-slim AS build
 
 WORKDIR /tmp/nginx/
 
@@ -69,6 +69,18 @@ RUN make -j $(nproc) modules
 RUN make install
 RUN cp /tmp/nginx/conf/mime.types /etc/nginx/
 
+
+FROM debian:stable-slim
+
+LABEL org.opencontainers.image.source=https://github.com/SynKolbasyn/QRigami
+LABEL org.opencontainers.image.description="Django image"
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
+
+RUN apt update
+RUN apt upgrade -y
+RUN apt install -y libpcre3-dev
+
+COPY --from=build /etc/nginx/ /etc/nginx/
 COPY --from=certs /certs/key.pem /etc/nginx/certs/
 COPY --from=certs /certs/cert.crt /etc/nginx/certs/
 COPY --from=static /qrigami/qrigami/static/ /var/www/static/
