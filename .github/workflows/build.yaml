@@ -32,7 +32,7 @@ jobs:
           context: ./
           file: ./nginx/Dockerfile
           push: true
-          tags: ghcr.io/mondegrin/qrigami_nginx:latest
+          tags: ghcr.io/synkolbasyn/qrigami:nginx
 
   django:
     runs-on: ubuntu-latest
@@ -60,4 +60,4 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/synkolbasyn/qrigami:latest
+          tags: ghcr.io/synkolbasyn/qrigami:django
