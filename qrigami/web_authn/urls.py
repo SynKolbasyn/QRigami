@@ -20,6 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from django.urls import path
 
 from web_authn.views import (
+    SignInFinishView,
+    SignInStartView,
+    SignInView,
     SignUpFinishView,
     SignUpStartView,
     SignUpView,
@@ -48,5 +51,20 @@ urlpatterns = [
         "activate/<str:credential_id>/",
         UserActivationView.as_view(),
         name="activate",
+    ),
+    path(
+        "signin/",
+        SignInView.as_view(),
+        name="signin",
+    ),
+    path(
+        "signin/start/",
+        SignInStartView.as_view(),
+        name="signin_start",
+    ),
+    path(
+        "signin/finish/",
+        SignInFinishView.as_view(),
+        name="signin_finish",
     ),
 ]
