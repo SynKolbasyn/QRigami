@@ -21,21 +21,31 @@ from os import environ
 from pathlib import Path
 
 
-def get_env_bool(key: str, *, default: bool = False) -> bool:
+def get_env_bool(key: str, *, default: bool | None = None) -> bool | None:
     """Get bool variable from env."""
     if key not in environ:
-        return default
+        if default:
+            return default
+        error_message = f"{key}"
+        raise KeyError(error_message)
     return environ[key].lower() in {"y", "yes", "t", "true", "on", "1"}
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 SECRET_KEY = environ.get("DJANGO_SECRET_KEY", "DJANGO_SECRET_KEY")
 
-DEBUG = get_env_bool("DJANGO_DEBUG", default=True)
+
+DEBUG = get_env_bool("DJANGO_DEBUG")
+
 
 ALLOWED_HOSTS = ["*"]
-INTERNAL_IPS = ["127.0.0.1"]
+
+
+if DEBUG:
+    INTERNAL_IPS = ["127.0.0.1"]
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -45,15 +55,18 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    "debug_toolbar",
-    "django_cleanup.apps.CleanupConfig",
     "sorl.thumbnail",
 
     "web_authn.apps.WebAuthnConfig",
+
+    "django_cleanup.apps.CleanupConfig",
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append("debug_toolbar")
+
+
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -63,7 +76,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+if DEBUG:
+    MIDDLEWARE = [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        *MIDDLEWARE,
+    ]
+
+
 ROOT_URLCONF = "qrigami.urls"
+
 
 TEMPLATES = [
     {
@@ -81,22 +102,33 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = "qrigami.wsgi.application"
 ASGI_APPLICATION = "qrigami.asgi.application"
 
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "OPTIONS": {
-            "pool": True,
-        },
-        "HOST": environ.get("POSTGRES_HOST", "127.0.0.1"),
-        "PORT": environ.get("POSTGRES_PORT", "5432"),
-        "USER": environ.get("POSTGRES_USER", "POSTGRES_USER"),
-        "PASSWORD": environ.get("POSTGRES_PASSWORD", "POSTGRES_PASSWORD"),
-        "NAME": environ.get("POSTGRES_DB", "POSTGRES_DB"),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     },
 }
+
+if not DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "OPTIONS": {
+                "pool": True,
+            },
+            "HOST": environ["POSTGRES_HOST"],
+            "PORT": environ["POSTGRES_PORT"],
+            "USER": environ["POSTGRES_USER"],
+            "PASSWORD": environ["POSTGRES_PASSWORD"],
+            "NAME": environ["POSTGRES_DB"],
+        },
+    }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -125,11 +157,13 @@ USE_TZ = True
 
 USE_I18N = True
 
+
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "static/"
 STATICFILES_DIRS = [BASE_DIR / "static_dev/"]
 
 MEDIA_URL = "media/"
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
