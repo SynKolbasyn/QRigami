@@ -25,9 +25,14 @@ from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonR
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import FormView, View
-from webauthn import generate_registration_options, verify_registration_response
+from webauthn import (
+    generate_authentication_options,
+    generate_registration_options,
+    verify_registration_response,
+)
 from webauthn.helpers.base64url_to_bytes import base64url_to_bytes
 from webauthn.helpers.bytes_to_base64url import bytes_to_base64url
+from webauthn.helpers.structs import UserVerificationRequirement
 
 from web_authn.forms import SignInForm, SignUpForm
 from web_authn.models import Credentials
@@ -142,3 +147,24 @@ class SignInView(FormView):
 
     template_name = "web_authn/signin.html"
     form_class = SignInForm
+
+
+class SignInStartView(View):
+
+    """WebAuthn signin start view."""
+
+    def post(self, request: HttpRequest) -> JsonResponse:
+        """Process post requests."""
+        form = SignInForm(request.POST or None)
+
+        if not form.is_valid():
+            return HttpResponseBadRequest(form.errors.as_json())
+
+        options = generate_authentication_options(
+            rp_id=settings.HOST,
+            user_verification=UserVerificationRequirement.REQUIRED,
+        )
+
+        request.session["challenge"] = bytes_to_base64url(options.challenge)
+
+        return JsonResponse(options, WebAuthnJSONEncoder, safe=False)
