@@ -50,10 +50,4 @@ class SignInForm(ModelForm):
         """SignIn meta class."""
 
         model = User
-        fields = (
-            User.username.field.name,
-        )
-
-    def __init__(self, *args: object, **kwargs: object) -> None:
-        """Initialize form."""
-        super().__init__(*args, **kwargs)
+        fields = ()
