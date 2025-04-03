@@ -29,7 +29,7 @@ from webauthn import generate_registration_options, verify_registration_response
 from webauthn.helpers.base64url_to_bytes import base64url_to_bytes
 from webauthn.helpers.bytes_to_base64url import bytes_to_base64url
 
-from web_authn.forms import SignUpForm
+from web_authn.forms import SignInForm, SignUpForm
 from web_authn.models import Credentials
 from web_authn.serializers import WebAuthnJSONEncoder
 
@@ -134,3 +134,11 @@ class UserActivationView(View):
         user.save(update_fields=[User.is_active.field.name])
 
         return render(request, "web_authn/email_verification_success.html")
+
+
+class SignInView(FormView):
+
+    """WebAuthn signin view."""
+
+    template_name = "web_authn/signin.html"
+    form_class = SignInForm
