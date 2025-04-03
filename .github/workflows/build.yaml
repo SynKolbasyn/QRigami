@@ -29,7 +29,8 @@ jobs:
         name: Build
         uses: docker/build-push-action@v6
         with:
-          context: ./nginx/
+          context: ./
+          file: ./nginx/Dockerfile
           push: true
           tags: mondegrin/qrigami_nginx:latest
 
@@ -57,5 +58,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./
+          file: ./Dockerfile
           push: true
           tags: mondegrin/qrigami_django:latest
