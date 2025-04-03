@@ -70,8 +70,8 @@ class SignUpStartView(View):
         )
 
         request.session["challenge"] = bytes_to_base64url(options.challenge)
-        request.session["username"] = bytes_to_base64url(username.encode())
-        request.session["email"] = bytes_to_base64url(email.encode())
+        request.session["username"] = username
+        request.session["email"] = email
 
         return JsonResponse(options, WebAuthnJSONEncoder, safe=False)
 
@@ -83,8 +83,8 @@ class SignUpFinishView(View):
     def post(self, request: HttpRequest) -> HttpResponse:
         """Process post requests."""
         challenge = base64url_to_bytes(request.session.pop("challenge"))
-        username = base64url_to_bytes(request.session.pop("username")).decode()
-        email = base64url_to_bytes(request.session.pop("email")).decode()
+        username = request.session.pop("username")
+        email = request.session.pop("email")
 
         verified_registration = verify_registration_response(
             credential=request.body.decode(),
