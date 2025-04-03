@@ -34,15 +34,7 @@ docker compose up --build -d
 - [Docker](https://www.docker.com/)
 - [uv](https://github.com/astral-sh/uv)
 
-## Configuration
-
-Configure project by setting variables in `.env`
-
-```bash
-cp ./template.env ./.env
-```
-
-## Develop
+## Configuration and debugging
 
 Install python
 
@@ -50,22 +42,16 @@ Install python
 uv python install
 ```
 
-Start database
-
-```bash
-docker compose up --build -d postgresql
-```
-
 Run migrations
 
 ```bash
-POSTGRES_HOST=127.0.0.1 uv run ./qrigami/manage.py migrate
+DJANGO_DEBUG=True uv run ./qrigami/manage.py migrate
 ```
 
 Start server
 
 ```bash
-POSTGRES_HOST=127.0.0.1 DJANGO_ORIGIN=http://localhost:8000 uv run ./qrigami/manage.py runserver
+DJANGO_DEBUG=True uv run ./qrigami/manage.py runserver
 ```
 
 [Click](http://localhost:8000/)
