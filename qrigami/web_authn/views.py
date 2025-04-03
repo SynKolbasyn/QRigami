@@ -87,7 +87,7 @@ class SignUpFinishView(View):
         email = base64url_to_bytes(request.session.pop("email")).decode()
 
         verified_registration = verify_registration_response(
-            credential=loads(request.body.decode()),
+            credential=request.body.decode(),
             expected_challenge=challenge,
             expected_rp_id=settings.HOST,
             expected_origin=settings.ORIGIN,
