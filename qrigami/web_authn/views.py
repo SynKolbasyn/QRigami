@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 from http import HTTPStatus
-from json import loads
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -26,6 +25,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonR
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import FormView, View
+from orjson import loads
 from webauthn import (
     generate_authentication_options,
     generate_registration_options,
@@ -179,7 +179,7 @@ class SignInFinishView(View):
     def post(self, request: HttpRequest) -> HttpResponse:
         """Process post requests."""
         challenge = base64url_to_bytes(request.session.pop("challenge"))
-        credential = loads(request.body.decode("utf-8"))
+        credential = loads(request.body)
         credential_id = base64url_to_bytes(credential["id"])
 
         query = (
