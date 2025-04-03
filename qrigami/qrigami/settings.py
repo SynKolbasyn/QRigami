@@ -173,9 +173,9 @@ HOST_NAME = "QRigami"
 ORIGIN = f"http://{HOST}:8000"
 
 if not DEBUG:
-    HOST = environ.get("DJANGO_HOST", "localhost")
-    HOST_NAME = environ.get("DJANGO_HOST_NAME", "QRigami")
-    ORIGIN = environ.get("DJANGO_ORIGIN", f"http://{HOST}:8000")
+    HOST = environ["DJANGO_HOST"]
+    HOST_NAME = environ["DJANGO_HOST_NAME"]
+    ORIGIN = environ["DJANGO_ORIGIN"]
 
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
