@@ -2,8 +2,7 @@ services:
   django:
     container_name: "django"
     hostname: "django"
-    build:
-      dockerfile: "./Dockerfile"
+    image: "ghcr.io/synkolbasyn/qrigami:django"
     ports:
       - "80"
     env_file:
@@ -15,8 +14,7 @@ services:
   nginx:
     container_name: "nginx"
     hostname: "nginx"
-    build:
-      dockerfile: "./nginx/Dockerfile"
+    image: "ghcr.io/synkolbasyn/qrigami:nginx"
     ports:
       - "80:80"
       - "443:443"
