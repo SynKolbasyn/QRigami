@@ -15,13 +15,13 @@ cp ./template.env ./.env
 ## Run
 
 ```bash
-docker compose up --build
+docker compose up
 ```
 
 Optional flag `-d` to get free terminal after containers have started
 
 ```bash
-docker compose up --build -d
+docker compose up -d
 ```
 
 [Click](https://localhost/)
@@ -31,7 +31,6 @@ docker compose up --build -d
 
 ## Dependencies
 
-- [Docker](https://www.docker.com/)
 - [uv](https://github.com/astral-sh/uv)
 
 ## Configuration and debugging
