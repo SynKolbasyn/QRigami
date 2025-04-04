@@ -72,10 +72,6 @@ RUN cp /tmp/nginx/conf/mime.types /etc/nginx/
 
 FROM debian:stable-slim
 
-LABEL org.opencontainers.image.source="https://github.com/SynKolbasyn/QRigami"
-LABEL org.opencontainers.image.description="Nginx image"
-LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
-
 RUN apt update
 RUN apt upgrade -y
 RUN apt install -y libpcre3-dev
