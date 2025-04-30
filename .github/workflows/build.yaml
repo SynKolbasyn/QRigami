@@ -8,7 +8,7 @@ on:
 
 jobs:
   frontend:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     permissions:
@@ -41,7 +41,7 @@ jobs:
           tags: ghcr.io/synkolbasyn/qrigami:frontend
 
   backend:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     permissions:
