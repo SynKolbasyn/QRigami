@@ -1,13 +1,23 @@
 name: Lint
 
-on:
-  push:
-  pull_request:
+on: [push, pull_request]
 
 jobs:
-  lint:
+  format:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
-      - run: uv run ruff check --ignore EXE001
+      - run: |
+          cd ./backend/
+          uv run --dev ruff format --check --diff
+
+  check:
+    needs: format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: |
+          cd ./backend/
+          uv run --dev ruff check
