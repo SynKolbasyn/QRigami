@@ -1,12 +1,14 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: [Lint]
+    types: [completed]
+    branches: [main, dev]
 
 jobs:
-  nginx:
+  frontend:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     permissions:
@@ -16,33 +18,30 @@ jobs:
       id-token: write
 
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
       
-      -
-        name: Login to container registry
+      - name: Login to container registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      -
-        name: Set up buildx
+      - name: Set up buildx
         uses: docker/setup-buildx-action@v3
 
-      -
-        name: Build
+      - name: Build
         id: push
         uses: docker/build-push-action@v6
         with:
-          context: ./
-          file: ./nginx/Dockerfile
+          context: ./frontend/
+          file: ./frontend/Dockerfile
           push: true
-          tags: ghcr.io/synkolbasyn/qrigami:nginx
+          tags: ghcr.io/synkolbasyn/qrigami:frontend
 
-  django:
+  backend:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     permissions:
@@ -52,28 +51,24 @@ jobs:
       id-token: write
 
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
       
-      -
-        name: Login to container registry
+      - name: Login to container registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      -
-        name: Set up buildx
+      - name: Set up buildx
         uses: docker/setup-buildx-action@v3
 
-      -
-        name: Build
+      - name: Build
         id: push
         uses: docker/build-push-action@v6
         with:
-          context: ./
-          file: ./Dockerfile
+          context: ./backend/
+          file: ./backend/Dockerfile
           push: true
-          tags: ghcr.io/synkolbasyn/qrigami:django
+          tags: ghcr.io/synkolbasyn/qrigami:backend
