@@ -1,7 +1,13 @@
 **/.venv/
+**/.github/
+**/.git/
 **/__pycache__/
-**/sent_emails/
+**/.ruff_cache/
+**/certs/
 
 **/*.sqlite3
 **/*.md
 **/*.lock
+**/*.yaml
+
+**/Dockerfile

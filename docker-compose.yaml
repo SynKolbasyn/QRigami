@@ -1,36 +1,44 @@
 services:
-  django:
-    container_name: "django"
-    hostname: "django"
-    image: "ghcr.io/synkolbasyn/qrigami:django"
-    ports:
-      - "80"
+  backend:
+    container_name: "backend"
+    hostname: "backend"
+    image: "ghcr.io/synkolbasyn/qrigami:backend"
+    build:
+      context: "./backend/"
+      dockerfile: "./Dockerfile"
+    expose:
+      - "443"
     env_file:
       - "./.env"
     depends_on:
       - "postgresql"
-    restart: "always"
+    restart: "unless-stopped"
 
-  nginx:
-    container_name: "nginx"
-    hostname: "nginx"
-    image: "ghcr.io/synkolbasyn/qrigami:nginx"
+  frontend:
+    container_name: "frontend"
+    hostname: "frontend"
+    image: "ghcr.io/synkolbasyn/qrigami:frontend"
+    build:
+      context: "./frontend/"
+      dockerfile: "./Dockerfile"
+    volumes:
+      - "./certs/:/etc/nginx/certs/"
     ports:
       - "80:80"
       - "443:443"
     depends_on:
-      - "django"
-    restart: "always"
+      - "backend"
+    restart: "unless-stopped"
 
   postgresql:
     container_name: "postgresql"
     hostname: "$POSTGRES_HOST"
     image: "postgres:latest"
-    ports:
-      - "$POSTGRES_PORT:$POSTGRES_PORT"
+    expose:
+      - "$POSTGRES_PORT"
     volumes:
       - "./database/:/var/lib/postgresql/data"
     env_file:
       - "./.env"
     shm_size: "1gb"
-    restart: "always"
+    restart: "unless-stopped"

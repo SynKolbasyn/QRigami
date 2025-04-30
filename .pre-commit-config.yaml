@@ -1,8 +1,14 @@
 repos:
   - repo: local
     hooks:
-      - id: ruff
-        name: Ruff
-        entry: uv run ruff check
+      - id: ruff_format
+        name: Ruff format
+        entry: sh -c "cd ./backend/ && uv run --dev ruff format --check --diff"
+        language: system
+        types: [python]
+
+      - id: ruff_check
+        name: Ruff check
+        entry: sh -c "cd ./backend/ && uv run --dev ruff check"
         language: system
         types: [python]
