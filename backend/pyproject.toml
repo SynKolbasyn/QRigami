@@ -10,6 +10,7 @@ requires-python = ">=3.13, <3.14"
 dependencies = [
     "hypercorn>=0.17.3",
     "litestar[cryptography,pydantic,redis,sqlalchemy]>=2.15.2",
+    "pydantic-settings>=2.9.1",
 ]
 
 [tool.uv]
