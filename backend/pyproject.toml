@@ -8,8 +8,8 @@ authors = [
 license = "AGPL-3.0-or-later"
 requires-python = ">=3.13, <3.14"
 dependencies = [
+    "hypercorn>=0.17.3",
     "litestar[cryptography,pydantic,redis,sqlalchemy]>=2.15.2",
-    "uvicorn[standard]>=0.34.2",
 ]
 
 [tool.uv]
